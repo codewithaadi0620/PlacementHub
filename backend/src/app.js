@@ -11,9 +11,9 @@ const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
-// Middleware
+// Middleware: Enable CORS for Vercel Frontend & Localhost
 app.use(cors({
-  origin: process.env.FRONTEND_URL || 'http://localhost:5173',
+  origin: true,
   credentials: true
 }));
 app.use(express.json());
@@ -27,10 +27,20 @@ app.use('/api', applicationRoutes);
 app.use('/api/admin', adminRoutes);
 
 // Health Check Route
-app.get('/api/health', (req, res) => {
+app.get('/api/health', async (req, res) => {
+  const db = require('./config/db');
+  let dbStatus = 'disconnected';
+  try {
+    const testRes = await db.query('SELECT 1');
+    if (testRes.rowCount > 0) dbStatus = 'connected';
+  } catch (err) {
+    dbStatus = `error: ${err.message}`;
+  }
+
   res.status(200).json({
     success: true,
     message: 'Placement Management Platform API is running',
+    database_status: dbStatus,
     timestamp: new Date().toISOString()
   });
 });
@@ -46,7 +56,7 @@ app.use((req, res, next) => {
 
 // Centralized Error Handling Middleware
 app.use((err, req, res, next) => {
-  console.error('API Exception:', err.message);
+  console.error('API Exception:', err);
   res.status(err.status || 500).json({
     success: false,
     message: err.message || 'Internal Server Error',
