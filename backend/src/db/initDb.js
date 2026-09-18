@@ -4,41 +4,49 @@ const { Pool } = require('pg');
 require('dotenv').config();
 
 async function initializeDatabase() {
-  // First connect to default postgres database to ensure target placement_db exists
-  const systemPool = new Pool({
-    user: process.env.PGUSER || 'postgres',
-    host: process.env.PGHOST || 'localhost',
-    database: 'postgres',
-    password: process.env.PGPASSWORD || 'postgres',
-    port: process.env.PGPORT ? parseInt(process.env.PGPORT, 10) : 5432,
-  });
+  let appPool;
 
-  const dbName = process.env.PGDATABASE || 'placement_db';
+  if (process.env.DATABASE_URL && process.env.DATABASE_URL.trim()) {
+    const dbUrl = process.env.DATABASE_URL.trim();
+    const isCloud = dbUrl.includes('neon.tech') || dbUrl.includes('supabase') || dbUrl.includes('render.com') || dbUrl.includes('sslmode=require');
+    
+    console.log('📡 Connecting to DATABASE_URL...');
+    appPool = new Pool({
+      connectionString: dbUrl,
+      ssl: isCloud || process.env.NODE_ENV === 'production' ? { rejectUnauthorized: false } : false
+    });
+  } else {
+    const dbName = process.env.PGDATABASE || 'placement_db';
+    const systemPool = new Pool({
+      user: process.env.PGUSER || 'postgres',
+      host: process.env.PGHOST || 'localhost',
+      database: 'postgres',
+      password: process.env.PGPASSWORD || 'postgres',
+      port: process.env.PGPORT ? parseInt(process.env.PGPORT, 10) : 5433,
+    });
 
-  try {
-    console.log(`🔍 Checking if database '${dbName}' exists...`);
-    const res = await systemPool.query(`SELECT 1 FROM pg_database WHERE datname = $1`, [dbName]);
-    if (res.rowCount === 0) {
-      console.log(`⚙️ Creating database '${dbName}'...`);
-      await systemPool.query(`CREATE DATABASE "${dbName}"`);
-      console.log(`✅ Database '${dbName}' created successfully.`);
-    } else {
-      console.log(`ℹ️ Database '${dbName}' already exists.`);
+    try {
+      console.log(`🔍 Checking if database '${dbName}' exists...`);
+      const res = await systemPool.query(`SELECT 1 FROM pg_database WHERE datname = $1`, [dbName]);
+      if (res.rowCount === 0) {
+        console.log(`⚙️ Creating database '${dbName}'...`);
+        await systemPool.query(`CREATE DATABASE "${dbName}"`);
+        console.log(`✅ Database '${dbName}' created successfully.`);
+      }
+    } catch (err) {
+      console.error('Error checking/creating database:', err.message);
+    } finally {
+      await systemPool.end();
     }
-  } catch (err) {
-    console.error('Error checking/creating database:', err.message);
-  } finally {
-    await systemPool.end();
-  }
 
-  // Connect to placement_db to execute schema & seed
-  const appPool = new Pool({
-    user: process.env.PGUSER || 'postgres',
-    host: process.env.PGHOST || 'localhost',
-    database: dbName,
-    password: process.env.PGPASSWORD || 'postgres',
-    port: process.env.PGPORT ? parseInt(process.env.PGPORT, 10) : 5432,
-  });
+    appPool = new Pool({
+      user: process.env.PGUSER || 'postgres',
+      host: process.env.PGHOST || 'localhost',
+      database: dbName,
+      password: process.env.PGPASSWORD || 'postgres',
+      port: process.env.PGPORT ? parseInt(process.env.PGPORT, 10) : 5433,
+    });
+  }
 
   try {
     console.log('📄 Reading schema.sql...');
