@@ -1,0 +1,55 @@
+-- Placement Management Platform Seed Data
+-- Demo Credentials:
+-- Admin: admin@example.com / Password123
+-- Recruiter: recruiter@example.com / Password123
+-- Student: student@example.com / Password123
+
+TRUNCATE TABLE applications, job_required_skills, job_postings, companies, student_skills, students, users RESTART IDENTITY CASCADE;
+
+INSERT INTO users (name, email, password_hash, role) VALUES
+('System Administrator', 'admin@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'admin'),
+('Sarah Jenkins (Recruiter)', 'recruiter@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'recruiter'),
+('David Miller (Recruiter)', 'techcorp@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'recruiter'),
+('Alex Johnson', 'student@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'student'),
+('Priya Sharma', 'priya@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'student'),
+('Rahul Verma', 'rahul@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'student'),
+('Ananya Das', 'ananya@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'student');
+
+INSERT INTO students (user_id, enrollment_number, phone, department, graduation_year, cgpa, resume_url) VALUES
+(4, 'EN2026CS101', '+1987654321', 'Computer Science', 2026, 8.50, 'https://example.com/resumes/alex_johnson.pdf'),
+(5, 'EN2026IT204', '+1987654322', 'Information Technology', 2026, 9.20, 'https://example.com/resumes/priya_sharma.pdf'),
+(6, 'EN2026EC305', '+1987654323', 'Electronics & Communication', 2026, 7.10, 'https://example.com/resumes/rahul_verma.pdf'),
+(7, 'EN2025ME408', '+1987654324', 'Mechanical Engineering', 2025, 6.40, 'https://example.com/resumes/ananya_das.pdf');
+
+INSERT INTO student_skills (student_id, skill_name) VALUES
+(1, 'React'), (1, 'Node.js'), (1, 'JavaScript'), (1, 'SQL'), (1, 'Git'),
+(2, 'React'), (2, 'Node.js'), (2, 'Python'), (2, 'PostgreSQL'), (2, 'Docker'), (2, 'Java'),
+(3, 'JavaScript'), (3, 'HTML'), (3, 'CSS'), (3, 'C++'),
+(4, 'AutoCAD'), (4, 'Python'), (4, 'SolidWorks');
+
+INSERT INTO companies (recruiter_id, company_name, description, website, location) VALUES
+(2, 'Global Tech Solutions', 'Leading enterprise software & cloud infrastructure provider.', 'https://globaltech.example.com', 'Bangalore, India'),
+(2, 'Innovate AI Labs', 'Next-gen artificial intelligence & data analytics startup.', 'https://innovateai.example.com', 'Hyderabad, India'),
+(3, 'CloudScale Systems', 'Scalable microservices and cloud management platforms.', 'https://cloudscale.example.com', 'Pune, India');
+
+INSERT INTO job_postings (company_id, title, description, location, employment_type, minimum_cgpa, graduation_year, deadline, status) VALUES
+(1, 'Software Development Engineer (SDE-1)', 'Build high-performance web applications using React, Node.js, and SQL databases. Work in an agile engineering environment.', 'Bangalore, India', 'Full-Time', 7.50, 2026, '2026-12-31', 'approved'),
+(1, 'Frontend Web Developer', 'Create intuitive and reactive user interfaces using modern React, Tailwind CSS, and REST APIs.', 'Remote', 'Full-Time', 7.00, 2026, '2026-11-30', 'approved'),
+(2, 'Associate Data Engineer', 'Design data pipelines and manage PostgreSQL data warehouses for machine learning models.', 'Hyderabad, India', 'Full-Time', 8.00, 2026, '2026-10-15', 'approved'),
+(3, 'Backend Systems Engineer', 'Optimize Express microservices, execute raw SQL optimization, and manage database connection pooling.', 'Pune, India', 'Full-Time', 8.50, 2026, '2026-12-15', 'approved'),
+(1, 'QA Automation Intern', 'Write automated end-to-end test suites and regression pipelines for cloud applications.', 'Bangalore, India', 'Internship', 6.50, 2026, '2026-09-30', 'pending');
+
+INSERT INTO job_required_skills (job_id, skill_name) VALUES
+(1, 'React'), (1, 'Node.js'), (1, 'SQL'),
+(2, 'React'), (2, 'JavaScript'), (2, 'CSS'),
+(3, 'Python'), (3, 'PostgreSQL'), (3, 'SQL'),
+(4, 'Node.js'), (4, 'PostgreSQL'),
+(5, 'Testing'), (5, 'Java');
+
+INSERT INTO applications (job_id, student_id, status, applied_at) VALUES
+(1, 1, 'shortlisted', CURRENT_TIMESTAMP - INTERVAL '5 days'),
+(2, 1, 'applied', CURRENT_TIMESTAMP - INTERVAL '2 days'),
+(1, 2, 'selected', CURRENT_TIMESTAMP - INTERVAL '10 days'),
+(3, 2, 'shortlisted', CURRENT_TIMESTAMP - INTERVAL '4 days'),
+(4, 2, 'applied', CURRENT_TIMESTAMP - INTERVAL '1 day'),
+(2, 3, 'rejected', CURRENT_TIMESTAMP - INTERVAL '6 days');
