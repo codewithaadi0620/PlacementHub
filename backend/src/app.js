@@ -18,7 +18,7 @@ app.use(cors({
 }));
 app.use(express.json());
 
-// API Routes mounted for both standard `/api/*` and Vercel serverless stripped `/ *` paths
+// API Routes mounted for standard `/api/*`, stripped `/*`, and root paths
 app.use('/api/auth', authRoutes);
 app.use('/auth', authRoutes);
 
