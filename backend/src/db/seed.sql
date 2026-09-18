@@ -7,17 +7,17 @@
 -- Clear existing data
 TRUNCATE TABLE applications, job_required_skills, job_postings, companies, student_skills, students, users RESTART IDENTITY CASCADE;
 
--- Hash for 'Password123': $2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru
+-- Hash for 'Password123': $2a$10$vvfjWbKo3hHWUjEuztwhCu0c.1CQMZIbzgrHUXgoQLTmqxeC3dNX6
 
 -- 1. SEED USERS
 INSERT INTO users (name, email, password_hash, role) VALUES
-('System Administrator', 'admin@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'admin'),
-('Sarah Jenkins (Recruiter)', 'recruiter@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'recruiter'),
-('David Miller (Recruiter)', 'techcorp@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'recruiter'),
-('Alex Johnson', 'student@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'student'),
-('Priya Sharma', 'priya@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'student'),
-('Rahul Verma', 'rahul@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'student'),
-('Ananya Das', 'ananya@example.com', '$2a$10$XlndwfqeTcI7/I6zwUlXreFHHYomIPwVdhKBQNq7ldNf9eelqA8ru', 'student');
+('System Administrator', 'admin@example.com', '$2a$10$vvfjWbKo3hHWUjEuztwhCu0c.1CQMZIbzgrHUXgoQLTmqxeC3dNX6', 'admin'),
+('Sarah Jenkins (Recruiter)', 'recruiter@example.com', '$2a$10$vvfjWbKo3hHWUjEuztwhCu0c.1CQMZIbzgrHUXgoQLTmqxeC3dNX6', 'recruiter'),
+('David Miller (Recruiter)', 'techcorp@example.com', '$2a$10$vvfjWbKo3hHWUjEuztwhCu0c.1CQMZIbzgrHUXgoQLTmqxeC3dNX6', 'recruiter'),
+('Alex Johnson', 'student@example.com', '$2a$10$vvfjWbKo3hHWUjEuztwhCu0c.1CQMZIbzgrHUXgoQLTmqxeC3dNX6', 'student'),
+('Priya Sharma', 'priya@example.com', '$2a$10$vvfjWbKo3hHWUjEuztwhCu0c.1CQMZIbzgrHUXgoQLTmqxeC3dNX6', 'student'),
+('Rahul Verma', 'rahul@example.com', '$2a$10$vvfjWbKo3hHWUjEuztwhCu0c.1CQMZIbzgrHUXgoQLTmqxeC3dNX6', 'student'),
+('Ananya Das', 'ananya@example.com', '$2a$10$vvfjWbKo3hHWUjEuztwhCu0c.1CQMZIbzgrHUXgoQLTmqxeC3dNX6', 'student');
 
 -- 2. SEED STUDENTS
 -- user_id 4: Alex Johnson
