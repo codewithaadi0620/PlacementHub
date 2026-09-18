@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 const API = axios.create({
-  baseURL: '/api',
+  baseURL: import.meta.env.VITE_API_URL || '/api',
   headers: {
     'Content-Type': 'application/json'
   }
@@ -24,7 +24,6 @@ API.interceptors.response.use(
   (response) => response,
   (error) => {
     if (error.response && error.response.status === 401) {
-      // If token expired or invalid, clear localStorage (except when logging in)
       if (!error.config.url.includes('/auth/login')) {
         localStorage.removeItem('placement_token');
         localStorage.removeItem('placement_user');
