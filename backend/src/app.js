@@ -11,23 +11,34 @@ const adminRoutes = require('./routes/adminRoutes');
 
 const app = express();
 
-// Middleware: Enable CORS for Vercel Frontend & Localhost
+// Middleware: Enable CORS for all Vercel domains & localhost
 app.use(cors({
   origin: true,
   credentials: true
 }));
 app.use(express.json());
 
-// API Routes
+// API Routes mounted for both standard `/api/*` and Vercel serverless stripped `/ *` paths
 app.use('/api/auth', authRoutes);
+app.use('/auth', authRoutes);
+
 app.use('/api/students', studentRoutes);
+app.use('/students', studentRoutes);
+
 app.use('/api/companies', companyRoutes);
+app.use('/companies', companyRoutes);
+
 app.use('/api/jobs', jobRoutes);
-app.use('/api', applicationRoutes);
+app.use('/jobs', jobRoutes);
+
 app.use('/api/admin', adminRoutes);
+app.use('/admin', adminRoutes);
+
+app.use('/api', applicationRoutes);
+app.use('/', applicationRoutes);
 
 // Health Check Route
-app.get('/api/health', async (req, res) => {
+const healthHandler = async (req, res) => {
   const db = require('./config/db');
   let dbStatus = 'disconnected';
   try {
@@ -43,16 +54,10 @@ app.get('/api/health', async (req, res) => {
     database_status: dbStatus,
     timestamp: new Date().toISOString()
   });
-});
+};
 
-// 404 Route Handler
-app.use((req, res, next) => {
-  res.status(404).json({
-    success: false,
-    message: `API endpoint not found: ${req.method} ${req.url}`,
-    errors: ['RESOURCE_NOT_FOUND']
-  });
-});
+app.get('/api/health', healthHandler);
+app.get('/health', healthHandler);
 
 // Centralized Error Handling Middleware
 app.use((err, req, res, next) => {
